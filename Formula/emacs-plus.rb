@@ -150,6 +150,13 @@ class EmacsPlus < Formula
     depends_on "fontconfig" => :recommended
   end
 
+  if build.with? "native-comp-branch"
+    depends_on "giflib" => :recommended
+    depends_on "jpeg" => :recommended
+    depends_on "libtiff" => :recommended
+    depends_on "gcc" => :recommended
+  end
+
   #
   # Incompatible options
   #
@@ -230,7 +237,7 @@ class EmacsPlus < Formula
 
   patch do
     url (PatchUrlResolver.url "fix-window-role")
-    sha256 "1f8423ea7e6e66c9ac6dd8e37b119972daa1264de00172a24a79a710efcb8130"
+    sha256 "ae92602a95564efe1aecec85563b116bf4211371a7c1f7e5d9c356107b4adf6d"
   end
 
   if build.with? "emacs-27-branch"
@@ -332,6 +339,10 @@ class EmacsPlus < Formula
       args << "--with-json"
     end
 
+    if build.with? "native-comp-branch"
+      args << "-with-nativecomp"
+    end
+
     args << "--with-modules" if build.with? "modules"
     args << "--with-rsvg" if build.with? "librsvg"
     args << "--without-pop" if build.with? "mailutils"
@@ -342,7 +353,7 @@ class EmacsPlus < Formula
       system "./autogen.sh"
     end
 
-    if build.with? "cocoa" and build.without? "x11"
+    if build.with? "cocoa" and build.without? "x11" and build.without? "native-comp-branch"
       args << "--with-ns" << "--disable-ns-self-contained"
 
       system "./configure", *args
@@ -399,6 +410,11 @@ class EmacsPlus < Formula
         args << "--without-x"
       end
       args << "--without-ns"
+
+      if build.with? "native-comp-branch"
+        ENV["CC"] = "gcc-9"
+        ENV["CPP"] = "cpp-9"
+      end
 
       system "./configure", *args
 
