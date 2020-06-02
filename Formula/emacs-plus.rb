@@ -123,7 +123,7 @@ class EmacsPlus < Formula
     elsif build.with? "native-comp-branch"
       url "https://github.com/emacs-mirror/emacs.git", :branch => "feature/native-comp"
     else
-      url "https://github.com/emacs-mirror/emacs.git"
+      url "https://github.com/emacs-mirror/emacs.git", :revision => "0c899eede338e8e1e349ddcdaf88723569d48f8d"
     end
   end
 
